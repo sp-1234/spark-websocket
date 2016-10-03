@@ -1,5 +1,8 @@
 import org.eclipse.jetty.websocket.api.*;
 import org.json.*;
+import spark.Service;
+import spark.Spark;
+
 import java.text.*;
 import java.util.*;
 import static j2html.TagCreator.*;
@@ -11,10 +14,13 @@ public class Chat {
     static int nextUserNumber = 1; //Assign to username for next connecting user
 
     public static void main(String[] args) {
-        staticFiles.location("/public"); //index.html is served at localhost:4567 (default port)
-        staticFiles.expireTime(600);
-        webSocket("/chat", ChatWebSocketHandler.class);
-        init();
+        final Service service = Service.ignite();
+
+        service.staticFiles.location("/public"); //index.html is served at localhost:4567 (default port)
+        service.staticFiles.expireTime(600);
+        service.webSocket("/chat", ChatWebSocketHandler.class);
+        service.init();
+
     }
 
     //Sends a message from one user to all users, along with a list of current usernames
